@@ -1,11 +1,8 @@
-import { HttpParams, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
-
-
 import { environment } from './../../environments/environment';
-import { Pessoa, Estado, Cidade } from './../core/model';
-import { MoneyHttp } from '../seguranca/money-http';
+import { Cidade, Estado, Pessoa } from './../core/model';
+
 
 export class PessoaFiltro {
   nome: string;
@@ -20,32 +17,29 @@ export class PessoaService {
   cidadesUrl: string;
   estadosUrl: string;
 
-  constructor(private http: MoneyHttp) {
+  constructor(private http: HttpClient) {
     this.pessoasUrl = `${environment.apiUrl}/pessoas`;
     this.estadosUrl = `${environment.apiUrl}/estados`;
     this.cidadesUrl = `${environment.apiUrl}/cidades`;
   }
 
   pesquisar(filtro: PessoaFiltro): Promise<any> {
-    let params = new HttpParams({
-      fromObject: {
-        page: filtro.pagina.toString(),
-        size: filtro.itensPorPagina.toString()
-      }
-    });
+    let params = new HttpParams()
+      .set('page', filtro.pagina.toString())
+      .set('size', filtro.itensPorPagina.toString());
 
     if (filtro.nome) {
-      params = params.append('nome', filtro.nome);
+      params = params.set('nome', filtro.nome);
     }
 
-    return this.http.get<any>(`${this.pessoasUrl}`, { params })
+    return this.http.get(`${this.pessoasUrl}`, { params })
       .toPromise()
       .then(response => {
-        const pessoas = response.content;
+        const pessoas = response['content'];
 
         const resultado = {
           pessoas,
-          total: response.totalElements
+          total: response['totalElements']
         };
 
         return resultado;
@@ -53,9 +47,9 @@ export class PessoaService {
   }
 
   listarTodas(): Promise<any> {
-    return this.http.get<any>(this.pessoasUrl)
+    return this.http.get(this.pessoasUrl)
       .toPromise()
-      .then(response => response.content);
+      .then(response => response['content']);
   }
 
   excluir(codigo: number): Promise<void> {
@@ -66,7 +60,7 @@ export class PessoaService {
 
   mudarStatus(codigo: number, ativo: boolean): Promise<void> {
     const headers = new HttpHeaders()
-        .append('Content-Type', 'application/json');
+      .append('Content-Type', 'application/json');
 
     return this.http.put(`${this.pessoasUrl}/${codigo}/ativo`, ativo, { headers })
       .toPromise()
@@ -94,11 +88,9 @@ export class PessoaService {
 
   pesquisarCidades(estado): Promise<Cidade[]> {
     const params = new HttpParams()
-      .append('estado', estado);
+      .set('estado', estado);
 
-    return this.http.get<Cidade[]>(this.cidadesUrl, {
-      params
-    }).toPromise();
+    return this.http.get<Cidade[]>(this.cidadesUrl, { params }).toPromise();
   }
 
 }

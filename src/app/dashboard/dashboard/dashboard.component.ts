@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
-
+import { Component, OnInit } from '@angular/core';
 import { DashboardService } from './../dashboard.service';
+
 
 @Component({
   selector: 'app-dashboard',
@@ -45,7 +45,7 @@ export class DashboardComponent implements OnInit {
             {
               data: dados.map(dado => dado.total),
               backgroundColor: ['#FF9900', '#109618', '#990099', '#3B3EAC', '#0099C6',
-                                  '#DD4477', '#3366CC', '#DC3912']
+                '#DD4477', '#3366CC', '#DC3912']
             }
           ]
         };

@@ -1,11 +1,11 @@
-import { Title } from '@angular/platform-browser';
 import { Component, OnInit, ViewChild } from '@angular/core';
-
-import { MessageService , ConfirmationService, LazyLoadEvent} from 'primeng/api';
-
-import { AuthService } from './../../seguranca/auth.service';
+import { Title } from '@angular/platform-browser';
+import { ConfirmationService, LazyLoadEvent, MessageService } from 'primeng/api';
+import { Table } from 'primeng/table';
 import { ErrorHandlerService } from './../../core/error-handler.service';
-import { LancamentoService, LancamentoFiltro } from './../lancamento.service';
+import { AuthService } from './../../seguranca/auth.service';
+import { LancamentoFiltro, LancamentoService } from './../lancamento.service';
+
 
 
 @Component({
@@ -18,11 +18,11 @@ export class LancamentosPesquisaComponent implements OnInit {
   totalRegistros = 0;
   filtro = new LancamentoFiltro();
   lancamentos = [];
-  @ViewChild('tabela', {static: true }) grid;
+  @ViewChild('tabela') grid: Table;
 
   constructor(
     private lancamentoService: LancamentoService,
-    private auth: AuthService,
+    public auth: AuthService,
     private errorHandler: ErrorHandlerService,
     private messageService: MessageService,
     private confirmation: ConfirmationService,
@@ -64,7 +64,7 @@ export class LancamentosPesquisaComponent implements OnInit {
         if (this.grid.first === 0) {
           this.pesquisar();
         } else {
-          this.grid.first = 0;
+          this.grid.reset();
         }
 
         this.messageService.add({ severity: 'success', detail: 'Lançamento excluído com sucesso!' });

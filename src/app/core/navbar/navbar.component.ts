@@ -1,9 +1,9 @@
-import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
-
+import { Router } from '@angular/router';
+import { AuthService } from './../../seguranca/auth.service';
 import { LogoutService } from './../../seguranca/logout.service';
 import { ErrorHandlerService } from './../error-handler.service';
-import { AuthService } from './../../seguranca/auth.service';
+
 
 @Component({
   selector: 'app-navbar',

@@ -1,13 +1,13 @@
-import { Title } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-
+import { Title } from '@angular/platform-browser';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-
 import { ErrorHandlerService } from './../../core/error-handler.service';
+import { Pessoa } from './../../core/model';
 import { PessoaService } from './../pessoa.service';
-import { Pessoa, Contato } from './../../core/model';
+
+
 
 @Component({
   selector: 'app-pessoa-cadastro',
@@ -46,14 +46,14 @@ export class PessoaCadastroComponent implements OnInit {
     this.pessoaService.listarEstados().then(lista => {
       this.estados = lista.map(uf => ({ label: uf.nome, value: uf.codigo }));
     })
-    .catch(erro => this.errorHandler.handle(erro));
+      .catch(erro => this.errorHandler.handle(erro));
   }
 
   carregarCidades() {
     this.pessoaService.pesquisarCidades(this.estadoSelecionado).then(lista => {
       this.cidades = lista.map(c => ({ label: c.nome, value: c.codigo }));
     })
-    .catch(erro => this.errorHandler.handle(erro));
+      .catch(erro => this.errorHandler.handle(erro));
   }
 
   get editando() {
@@ -66,7 +66,7 @@ export class PessoaCadastroComponent implements OnInit {
         this.pessoa = pessoa;
 
         this.estadoSelecionado = (this.pessoa.endereco.cidade) ?
-                this.pessoa.endereco.cidade.estado.codigo : null;
+          this.pessoa.endereco.cidade.estado.codigo : null;
 
         if (this.estadoSelecionado) {
           this.carregarCidades();
@@ -108,7 +108,7 @@ export class PessoaCadastroComponent implements OnInit {
   nova(form: FormControl) {
     form.reset();
 
-    setTimeout(function() {
+    setTimeout(function () {
       this.pessoa = new Pessoa();
     }.bind(this), 1);
 

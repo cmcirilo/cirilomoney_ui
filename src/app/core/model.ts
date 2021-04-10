@@ -28,10 +28,10 @@ export class Contato {
     nome?: string,
     email?: string,
     telefone?: string) {
-      this.codigo = codigo;
-      this.nome = nome;
-      this.email = email;
-      this.telefone = telefone;
+    this.codigo = codigo;
+    this.nome = nome;
+    this.email = email;
+    this.telefone = telefone;
   }
 }
 

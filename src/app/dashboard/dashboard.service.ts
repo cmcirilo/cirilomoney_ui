@@ -1,22 +1,21 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
-
 import * as moment from 'moment';
-
 import { environment } from './../../environments/environment';
-import { MoneyHttp } from '../seguranca/money-http';
+
+
 
 @Injectable()
 export class DashboardService {
 
   lancamentosUrl: string;
 
-  constructor(private http: MoneyHttp) {
+  constructor(private http: HttpClient) {
     this.lancamentosUrl = `${environment.apiUrl}/lancamentos`;
   }
 
   lancamentosPorCategoria(): Promise<Array<any>> {
-    return this.http.get<Array<any>>(`${this.lancamentosUrl}/estatisticas/por-categoria`)
+    return this.http.get<any>(`${this.lancamentosUrl}/estatisticas/por-categoria`)
       .toPromise();
   }
 
@@ -24,10 +23,9 @@ export class DashboardService {
     return this.http.get<Array<any>>(`${this.lancamentosUrl}/estatisticas/por-dia`)
       .toPromise()
       .then(response => {
-        const dados = response;
-        this.converterStringsParaDatas(dados);
+        this.converterStringsParaDatas(response);
 
-        return dados;
+        return response;
       });
   }
 

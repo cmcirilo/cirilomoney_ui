@@ -1,16 +1,14 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
-
-
 import { environment } from './../../environments/environment';
-import { MoneyHttp } from '../seguranca/money-http';
+
 
 @Injectable()
 export class CategoriaService {
 
   categoriasUrl: string;
 
-  constructor(private http: MoneyHttp) {
+  constructor(private http: HttpClient) {
     this.categoriasUrl = `${environment.apiUrl}/categorias`;
   }
 

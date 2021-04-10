@@ -1,20 +1,21 @@
-import { FormsModule } from '@angular/forms';
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { JwtModule } from '@auth0/angular-jwt';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { JwtHelperService, JwtModule } from '@auth0/angular-jwt';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
-
-import { AuthGuard } from './auth.guard';
-import { LogoutService } from './logout.service';
-import { AuthService } from './auth.service';
-import { MoneyHttp } from './money-http';
-import { SegurancaRoutingModule } from './seguranca-routing.module';
-import { LoginFormComponent } from './login-form/login-form.component';
 import { environment } from '../../environments/environment';
+import { AuthGuard } from './auth.guard';
+import { LoginFormComponent } from './login-form/login-form.component';
+import { LogoutService } from './logout.service';
+import { MoneyHttpInterceptor } from './money-http-interceptor';
+import { SegurancaRoutingModule } from './seguranca-routing.module';
 
-export function tokenGetter() {
+
+
+
+export function tokenGetter(): string {
   return localStorage.getItem('token');
 }
 
@@ -23,21 +24,28 @@ export function tokenGetter() {
     CommonModule,
     FormsModule,
 
-    JwtModule.forRoot({
-      config: {
-        tokenGetter: tokenGetter,
-        whitelistedDomains: environment.tokenWhitelistedDomains,
-        blacklistedRoutes: environment.tokenBlacklistedRoutes
-      }
-    }),
     InputTextModule,
     ButtonModule,
 
+    JwtModule.forRoot({
+      config: {
+        tokenGetter,
+        allowedDomains: environment.tokenAllowedDomains,
+        disallowedRoutes: environment.tokenDisallowedRoutes
+      }
+    }),
 
     SegurancaRoutingModule
   ],
   declarations: [LoginFormComponent],
   providers: [
+    JwtHelperService,
+
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: MoneyHttpInterceptor,
+      multi: true
+    },
     AuthGuard,
     LogoutService
   ]

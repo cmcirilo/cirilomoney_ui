@@ -1,7 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-
 import { Contato } from '../../core/model';
+
 
 @Component({
   selector: 'app-pessoa-cadastro-contato',

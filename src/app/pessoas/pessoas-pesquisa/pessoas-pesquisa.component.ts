@@ -1,11 +1,11 @@
-
-import { Title } from '@angular/platform-browser';
 import { Component, OnInit, ViewChild } from '@angular/core';
-
-import { MessageService , ConfirmationService, LazyLoadEvent} from 'primeng/api';
-
+import { Title } from '@angular/platform-browser';
+import { ConfirmationService, LazyLoadEvent, MessageService } from 'primeng/api';
+import { Table } from 'primeng/table';
 import { ErrorHandlerService } from './../../core/error-handler.service';
 import { PessoaFiltro, PessoaService } from './../pessoa.service';
+
+
 
 @Component({
   selector: 'app-pessoas-pesquisa',
@@ -17,7 +17,7 @@ export class PessoasPesquisaComponent implements OnInit {
   totalRegistros = 0;
   filtro = new PessoaFiltro();
   pessoas = [];
-  @ViewChild('tabela', {static: true }) grid;
+  @ViewChild('tabela') grid: Table;
 
   constructor(
     private pessoaService: PessoaService,
@@ -62,7 +62,7 @@ export class PessoasPesquisaComponent implements OnInit {
         if (this.grid.first === 0) {
           this.pesquisar();
         } else {
-          this.grid.first = 0;
+          this.grid.reset();
         }
 
         this.messageService.add({ severity: 'success', detail: 'Pesssoa excluída com sucesso!' });

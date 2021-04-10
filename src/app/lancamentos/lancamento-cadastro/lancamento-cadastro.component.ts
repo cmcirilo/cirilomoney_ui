@@ -1,15 +1,15 @@
-import { Title } from '@angular/platform-browser';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-
 import { MessageService } from 'primeng/api';
-
-import { ErrorHandlerService } from './../../core/error-handler.service';
 import { CategoriaService } from './../../categorias/categoria.service';
-import { PessoaService } from './../../pessoas/pessoa.service';
+import { ErrorHandlerService } from './../../core/error-handler.service';
 import { Lancamento } from './../../core/model';
+import { PessoaService } from './../../pessoas/pessoa.service';
 import { LancamentoService } from './../lancamento.service';
+
+
 
 @Component({
   selector: 'app-lancamento-cadastro',
@@ -56,14 +56,12 @@ export class LancamentoCadastroComponent implements OnInit {
     this.carregarPessoas();
   }
 
-  antesUploadAnexo(event) {
-    event.xhr.setRequestHeader('Authorization', 'Bearer ' + localStorage.getItem('token'));
-
+  antesUploadAnexo() {
     this.uploadEmAndamento = true;
   }
 
   aoTerminarUploadAnexo(event) {
-    const anexo = JSON.parse(event.xhr.response);
+    const anexo = event.originalEvent.body;
 
     this.formulario.patchValue({
       anexo: anexo.nome,
@@ -103,17 +101,17 @@ export class LancamentoCadastroComponent implements OnInit {
   configurarFormulario() {
     this.formulario = this.formBuilder.group({
       codigo: [],
-      tipo: [ 'RECEITA', Validators.required ],
-      dataVencimento: [ null, Validators.required ],
+      tipo: ['RECEITA', Validators.required],
+      dataVencimento: [null, Validators.required],
       dataPagamento: [],
-      descricao: [null, [ this.validarObrigatoriedade, this.validarTamanhoMinimo(5) ]],
-      valor: [ null, Validators.required ],
+      descricao: [null, [this.validarObrigatoriedade, this.validarTamanhoMinimo(5)]],
+      valor: [null, Validators.required],
       pessoa: this.formBuilder.group({
-        codigo: [ null, Validators.required ],
+        codigo: [null, Validators.required],
         nome: []
       }),
       categoria: this.formBuilder.group({
-        codigo: [ null, Validators.required ],
+        codigo: [null, Validators.required],
         nome: []
       }),
       observacao: [],
@@ -199,7 +197,7 @@ export class LancamentoCadastroComponent implements OnInit {
   novo() {
     this.formulario.reset();
 
-    setTimeout(function() {
+    setTimeout(function () {
       this.lancamento = new Lancamento();
     }.bind(this), 1);
 
@@ -209,4 +207,5 @@ export class LancamentoCadastroComponent implements OnInit {
   atualizarTituloEdicao() {
     this.title.setTitle(`Edição de lançamento: ${this.formulario.get('descricao').value}`);
   }
+
 }

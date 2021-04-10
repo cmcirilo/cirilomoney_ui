@@ -1,12 +1,10 @@
-import { HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
 import * as moment from 'moment';
-
-
 import { environment } from './../../environments/environment';
 import { Lancamento } from './../core/model';
-import { MoneyHttp } from '../seguranca/money-http';
+
+
 
 export class LancamentoFiltro {
   descricao: string;
@@ -21,7 +19,7 @@ export class LancamentoService {
 
   lancamentosUrl: string;
 
-  constructor(private http: MoneyHttp) {
+  constructor(private http: HttpClient) {
     this.lancamentosUrl = `${environment.apiUrl}/lancamentos`;
   }
 
@@ -30,36 +28,32 @@ export class LancamentoService {
   }
 
   pesquisar(filtro: LancamentoFiltro): Promise<any> {
-    let params = new HttpParams({
-      fromObject: {
-        page: filtro.pagina.toString(),
-        size: filtro.itensPorPagina.toString()
-      }
-    });
+    let params = new HttpParams()
+      .set('page', filtro.pagina.toString())
+      .set('size', filtro.itensPorPagina.toString());
 
     if (filtro.descricao) {
-      params = params.append('descricao', filtro.descricao);
+      params = params.set('descricao', filtro.descricao);
     }
 
     if (filtro.dataVencimentoInicio) {
-      params = params.append('dataVencimentoDe',
+      params = params.set('dataVencimentoDe',
         moment(filtro.dataVencimentoInicio).format('YYYY-MM-DD'));
     }
 
     if (filtro.dataVencimentoFim) {
-      params = params.append('dataVencimentoAte',
+      params = params.set('dataVencimentoAte',
         moment(filtro.dataVencimentoFim).format('YYYY-MM-DD'));
     }
 
-    return this.http.get<any>(`${this.lancamentosUrl}?resumo`,
-        { params })
+    return this.http.get(`${this.lancamentosUrl}?resumo`, { params })
       .toPromise()
       .then(response => {
-        const lancamentos = response.content;
+        const lancamentos = response['content'];
 
         const resultado = {
           lancamentos,
-          total: response.totalElements
+          total: response['totalElements']
         };
 
         return resultado;
